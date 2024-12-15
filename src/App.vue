@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import HelloWorld from "./components/HelloWorld.vue";
+import JuiceLab from "./components/JuiceLab.vue";
 </script>
 
 <template>
-  <HelloWorld msg="Vite + Vue" />
+  <JuiceLab></JuiceLab>
 </template>
