@@ -4,5 +4,10 @@ Inspired by Jesse zhou (https://jesse-zhou.medium.com/jesses-ramen-case-study-77
 
 ## TODO
 
-- AC on roof needs bottom
-- Baked textrue looks pixelated (denoise)
+- Gif Animations
+- Navigation
+- Navigation Screens
+- Loading Screen
+- Ground looks pixelated
+- Mixers are black
+- Arcade controll is black
