@@ -11,3 +11,5 @@ Inspired by Jesse zhou (https://jesse-zhou.medium.com/jesses-ramen-case-study-77
 - Ground looks pixelated
 - Mixers are black
 - Arcade controll is black
+- move nav text further apart and more to the left
+- bake textrue for rotor blade on roof

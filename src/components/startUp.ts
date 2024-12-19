@@ -3,6 +3,8 @@ import {
   Clock,
   Mesh,
   MeshBasicMaterial,
+  Object3D,
+  Object3DEventMap,
   PerspectiveCamera,
   PlaneGeometry,
   Scene,
@@ -14,6 +16,9 @@ import { sceneRenderer } from "./sceneRenderer";
 import { configureControls } from "./cameraControls";
 import { GLTF, GLTFLoader } from "three/examples/jsm/Addons.js";
 import { loadAnimations } from "./loadAnimations";
+import { NavigationNames } from "../models/navigationNames";
+import mouseEvents from "./mouseEvents";
+import { initClickableObjects } from "./navigationHelper";
 
 export const startUp = async (
   canvas: Ref<HTMLCanvasElement | null>,
@@ -38,8 +43,28 @@ export const startUp = async (
   const ambientLight = new AmbientLight(0xffffff, 3);
   mainScene.add(ambientLight);
 
+  const navItems = [
+    NavigationNames.aboutMe,
+    NavigationNames.projects,
+    NavigationNames.game,
+    NavigationNames.credits,
+  ];
+
+  let clickableObjects = initClickableObjects(mainScene, navItems);
+
   const gltf = await loadGLBModel(modelPath);
-  mainScene.add(gltf.scene);
+
+  const model = gltf.scene;
+
+  let glowOnHoverObjects: Object3D<Object3DEventMap>[] = [];
+  model.traverse((child) => {
+    // Renamed the mesh in blender like NavigationNames enum and added "Text" behind it
+    if (navItems.map((item) => item + "Text").includes(child.name)) {
+      glowOnHoverObjects.push(child);
+    }
+  });
+
+  mainScene.add(model);
 
   // Add videos
   const video = document.createElement("video");
@@ -55,17 +80,36 @@ export const startUp = async (
   // Create a material using the video texture
   const videoMaterial = new MeshBasicMaterial({ map: videoTexture });
 
-  // Create a plane geometry for the video
-  const geometry = new PlaneGeometry(8.5, 26); // Aspect ratio of the video
-  geometry.scale(0.1, 0.1, 0.1); // Adjust scale if needed
-  const plane = new Mesh(geometry, videoMaterial);
+  const videoGeometry = new PlaneGeometry(8.5, 26); // Aspect ratio of the video
+  videoGeometry.scale(0.1, 0.1, 0.1);
+  const plane = new Mesh(videoGeometry, videoMaterial);
   plane.position.set(-1.55, 3.35, -7.45);
   plane.rotation.y = Math.PI;
-  // Add the plane to the scene
   mainScene.add(plane);
 
   const clock = new Clock();
   const mixer = loadAnimations(gltf);
+
+  // Handle window resize
+  window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    composer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  let intersectedObject: Mesh | null = null;
+
+  const { onMouseClick, onMouseMove } = mouseEvents(
+    camera,
+    clickableObjects,
+    navItems,
+    intersectedObject,
+    glowOnHoverObjects
+  );
+
+  window.addEventListener("click", onMouseClick, false);
+  window.addEventListener("mousemove", onMouseMove, false);
 
   // Animation loop
   const animate = () => {
@@ -81,14 +125,6 @@ export const startUp = async (
   };
 
   animate();
-
-  // Handle window resize
-  window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    composer.setSize(window.innerWidth, window.innerHeight);
-  });
 };
 
 async function loadGLBModel(modelPath: string): Promise<GLTF> {
