@@ -1,5 +1,6 @@
 import {
   AmbientLight,
+  BoxGeometry,
   Clock,
   Mesh,
   MeshBasicMaterial,
@@ -11,9 +12,13 @@ import {
   SRGBColorSpace,
   VideoTexture,
 } from "three";
-import { Ref } from "vue";
+import { ref, Ref } from "vue";
 import { sceneRenderer } from "./sceneRenderer";
-import { configureControls } from "./cameraControls";
+import {
+  configureControls,
+  enableCameraControll,
+  resetCamera,
+} from "./cameraControls";
 import { GLTF, GLTFLoader } from "three/examples/jsm/Addons.js";
 import { loadAnimations } from "./loadAnimations";
 import { NavigationNames } from "../models/navigationNames";
@@ -99,21 +104,54 @@ export const startUp = async (
   });
 
   let intersectedObject: Mesh | null = null;
+  let cameraOnFocus = ref(false);
 
   const { onMouseClick, onMouseMove } = mouseEvents(
     camera,
+    controls,
     clickableObjects,
     navItems,
     intersectedObject,
-    glowOnHoverObjects
+    glowOnHoverObjects,
+    cameraOnFocus
   );
 
   window.addEventListener("click", onMouseClick, false);
   window.addEventListener("mousemove", onMouseMove, false);
 
+  // ---------------------------------------------
+  //                T E S T I N G
+  // ---------------------------------------------
+  const mesht1 = new Mesh(
+    new BoxGeometry(0.1, 2, 2),
+    new MeshBasicMaterial({
+      color: 0xff0000,
+    })
+  );
+  mesht1.name = "t1";
+  mesht1.position.set(15, 9.3, 0); //back-front, down-up, right-left
+  mainScene.add(mesht1);
+
+  //Remove if not needed
+  window.addEventListener("keydown", async (event) => {
+    // Check if the pressed key is "g" or "G"
+    if (event.key === "h" || event.key === "H") {
+      await resetCamera(camera);
+
+      cameraOnFocus.value = false;
+      enableCameraControll(controls);
+    }
+  });
+
+  // ---------------------------------------------
+  //                T E S T I N G
+  // ---------------------------------------------
+
   // Animation loop
   const animate = () => {
-    controls.update();
+    if (!cameraOnFocus.value) {
+      controls.update();
+    }
     composer.render();
 
     const delta = clock.getDelta();
@@ -127,7 +165,7 @@ export const startUp = async (
   animate();
 };
 
-async function loadGLBModel(modelPath: string): Promise<GLTF> {
+const loadGLBModel = async (modelPath: string): Promise<GLTF> => {
   try {
     const loader = new GLTFLoader();
     const gltf = await loader.loadAsync(modelPath);
@@ -135,4 +173,4 @@ async function loadGLBModel(modelPath: string): Promise<GLTF> {
   } catch (error) {
     throw Error(`Error loading GLB model: ${error}`);
   }
-}
+};

@@ -8,13 +8,19 @@ import {
   Vector2,
 } from "three";
 import { checkRayIntersections, getMouseVector2 } from "./rayCastHelper";
+import { OrbitControls } from "three/examples/jsm/Addons.js";
+import { navigationCoordinates } from "./navigationCoordinates";
+import { enableCameraControll, moveCamera } from "./cameraControls";
+import { Ref } from "vue";
 
 const mouseEvents = (
   camera: PerspectiveCamera,
+  controls: OrbitControls,
   clickableObjects: Object3D<Object3DEventMap>[],
   navItems: string[],
   intersectedObject: Mesh | null,
-  glowOnHoverObjects: Object3D<Object3DEventMap>[]
+  glowOnHoverObjects: Object3D<Object3DEventMap>[],
+  cameraOnFocus: Ref<boolean>
 ) => {
   let mousePointer = new Vector2();
   const raycaster = new Raycaster();
@@ -34,7 +40,7 @@ const mouseEvents = (
     }
 
     if (navItems.includes(clickedObj.name)) {
-      handleTriggerClick(clickedObj.name);
+      onClick(clickedObj.name, camera, controls, cameraOnFocus);
     }
   };
 
@@ -74,9 +80,30 @@ const mouseEvents = (
 
 export default mouseEvents;
 
-function handleTriggerClick(navItem: string) {
+const onClick = async (
+  navItem: string,
+  camera: PerspectiveCamera,
+  controls: OrbitControls,
+  cameraOnFocus: Ref<boolean>
+) => {
   console.log(`clicked on: ${navItem}`);
-}
+
+  const coordinates = navigationCoordinates.find(
+    (item) => item.objectName === navItem
+  );
+
+  if (!coordinates) {
+    return;
+  }
+
+  //TODO Wait till momentum stops completly  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  cameraOnFocus.value = true;
+  enableCameraControll(controls, false);
+  controls.update();
+
+  await moveCamera(camera, coordinates.position, coordinates.rotation);
+};
 
 const updateEmissiveIntensity = (object, from: number, to: number) => {
   if ((object.material as MeshStandardMaterial).emissiveIntensity === from) {

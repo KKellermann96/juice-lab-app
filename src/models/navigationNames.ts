@@ -3,4 +3,5 @@ export enum NavigationNames {
   projects = "projects",
   game = "game",
   credits = "credits",
+  start = "start",
 }

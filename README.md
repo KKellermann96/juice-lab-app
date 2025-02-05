@@ -1,15 +1,14 @@
 # JuiceLab
 
-Inspired by Jesse zhou (https://jesse-zhou.medium.com/jesses-ramen-case-study-77bae77ab5f0)
+Inspired by Jesse Zhou (https://jesse-zhou.medium.com/jesses-ramen-case-study-77bae77ab5f0)
 
 ## TODO
 
 - Gif Animations
-- Navigation
 - Navigation Screens
 - Loading Screen
 - Ground looks pixelated
 - Mixers are black
+- Indoor fence has a black dot
 - Arcade controll is black
-- move nav text further apart and more to the left
-- bake textrue for rotor blade on roof
+- If camera looks at a specific angle, disable the nav buttons
