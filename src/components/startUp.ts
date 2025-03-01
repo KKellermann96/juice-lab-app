@@ -1,14 +1,21 @@
 import {
   AmbientLight,
+  BufferGeometry,
   Clock,
+  DoubleSide,
+  Float32BufferAttribute,
+  LinearFilter,
   Mesh,
   MeshBasicMaterial,
   Object3D,
   Object3DEventMap,
   PerspectiveCamera,
   PlaneGeometry,
+  RGBFormat,
   Scene,
   SRGBColorSpace,
+  Vector2,
+  Vector3,
   VideoTexture,
 } from "three";
 import { ref, Ref } from "vue";
@@ -28,6 +35,7 @@ import { loadAnimations } from "./loadAnimations";
 import { NavigationNames } from "../models/navigationNames";
 import mouseEvents from "./mouseEvents";
 import { initClickableObjects } from "./navigationHelper";
+import { addVideo } from "../addVideo";
 
 export const startUp = async (
   canvas: Ref<HTMLCanvasElement | null>,
@@ -76,24 +84,19 @@ export const startUp = async (
 
   mainScene.add(model);
 
-  // Add videos
-  const video = document.createElement("video");
-  video.src = "/videos/projects.mp4";
-  video.loop = true;
-  video.muted = true;
-  video.play();
+  addVideo(
+    "/videos/sideDisplay.mp4",
+    new Vector3(-4.65, 9.3, -6.75),
+    new Vector2(32, 17),
+    mainScene
+  );
 
-  const videoTexture = new VideoTexture(video);
-  videoTexture.colorSpace = SRGBColorSpace;
-
-  const videoMaterial = new MeshBasicMaterial({ map: videoTexture });
-
-  const videoGeometry = new PlaneGeometry(8.5, 26);
-  videoGeometry.scale(0.1, 0.1, 0.1);
-  const plane = new Mesh(videoGeometry, videoMaterial);
-  plane.position.set(-1.55, 3.35, -7.45);
-  plane.rotation.y = Math.PI;
-  mainScene.add(plane);
+  addVideo(
+    "/videos/projects.mp4",
+    new Vector3(-1.55, 3.35, -7.45),
+    new Vector2(8.5, 26),
+    mainScene
+  );
 
   const clock = new Clock();
   const mixer = loadAnimations(gltf);
