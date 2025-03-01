@@ -1,6 +1,5 @@
 import {
   AmbientLight,
-  BoxGeometry,
   Clock,
   Mesh,
   MeshBasicMaterial,
@@ -19,7 +18,12 @@ import {
   enableCameraControll,
   resetCamera,
 } from "./cameraControls";
-import { GLTF, GLTFLoader } from "three/examples/jsm/Addons.js";
+import {
+  CSS2DObject,
+  CSS2DRenderer,
+  GLTF,
+  GLTFLoader,
+} from "three/examples/jsm/Addons.js";
 import { loadAnimations } from "./loadAnimations";
 import { NavigationNames } from "../models/navigationNames";
 import mouseEvents from "./mouseEvents";
@@ -27,7 +31,8 @@ import { initClickableObjects } from "./navigationHelper";
 
 export const startUp = async (
   canvas: Ref<HTMLCanvasElement | null>,
-  modelPath: string
+  modelPath: string,
+  htmlRenderer: CSS2DRenderer
 ) => {
   if (!canvas.value) return;
 
@@ -73,19 +78,17 @@ export const startUp = async (
 
   // Add videos
   const video = document.createElement("video");
-  video.src = "/videos/projects.mp4"; // Converted GIF as a video
+  video.src = "/videos/projects.mp4";
   video.loop = true;
-  video.muted = true; // Autoplay requires muted video
+  video.muted = true;
   video.play();
 
-  // Create a texture from the video
   const videoTexture = new VideoTexture(video);
   videoTexture.colorSpace = SRGBColorSpace;
 
-  // Create a material using the video texture
   const videoMaterial = new MeshBasicMaterial({ map: videoTexture });
 
-  const videoGeometry = new PlaneGeometry(8.5, 26); // Aspect ratio of the video
+  const videoGeometry = new PlaneGeometry(8.5, 26);
   videoGeometry.scale(0.1, 0.1, 0.1);
   const plane = new Mesh(videoGeometry, videoMaterial);
   plane.position.set(-1.55, 3.35, -7.45);
@@ -95,16 +98,20 @@ export const startUp = async (
   const clock = new Clock();
   const mixer = loadAnimations(gltf);
 
-  // Handle window resize
-  window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    composer.setSize(window.innerWidth, window.innerHeight);
-  });
-
   let intersectedObject: Mesh | null = null;
   let cameraOnFocus = ref(false);
+
+  const css2dObject = ref<CSS2DObject | undefined>(undefined);
+
+  const resetToStart = async () => {
+    mainScene.remove(css2dObject.value);
+    css2dObject.value = undefined;
+    await resetCamera(camera);
+
+    cameraOnFocus.value = false;
+    htmlRenderer.domElement.style.pointerEvents = "none";
+    enableCameraControll(controls);
+  };
 
   const { onMouseClick, onMouseMove } = mouseEvents(
     camera,
@@ -113,7 +120,11 @@ export const startUp = async (
     navItems,
     intersectedObject,
     glowOnHoverObjects,
-    cameraOnFocus
+    cameraOnFocus,
+    htmlRenderer,
+    resetToStart,
+    mainScene,
+    css2dObject
   );
 
   window.addEventListener("click", onMouseClick, false);
@@ -122,24 +133,12 @@ export const startUp = async (
   // ---------------------------------------------
   //                T E S T I N G
   // ---------------------------------------------
-  const mesht1 = new Mesh(
-    new BoxGeometry(0.1, 2, 2),
-    new MeshBasicMaterial({
-      color: 0xff0000,
-    })
-  );
-  mesht1.name = "t1";
-  mesht1.position.set(15, 9.3, 0); //back-front, down-up, right-left
-  mainScene.add(mesht1);
 
   //Remove if not needed
   window.addEventListener("keydown", async (event) => {
     // Check if the pressed key is "g" or "G"
     if (event.key === "h" || event.key === "H") {
-      await resetCamera(camera);
-
-      cameraOnFocus.value = false;
-      enableCameraControll(controls);
+      resetToStart();
     }
   });
 
@@ -147,12 +146,22 @@ export const startUp = async (
   //                T E S T I N G
   // ---------------------------------------------
 
+  // Handle window resize
+  window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    composer.setSize(window.innerWidth, window.innerHeight);
+    htmlRenderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
   // Animation loop
   const animate = () => {
     if (!cameraOnFocus.value) {
       controls.update();
     }
     composer.render();
+    htmlRenderer.render(mainScene, camera);
 
     const delta = clock.getDelta();
     if (mixer) {

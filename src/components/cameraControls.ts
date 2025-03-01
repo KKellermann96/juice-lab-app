@@ -25,6 +25,7 @@ export const configureControls = (
 export const enableCameraControll = (controls: OrbitControls, value = true) => {
   controls.enableRotate = value;
   controls.enableDamping = value;
+  controls.enableZoom = value;
 };
 
 export const moveCamera = async (

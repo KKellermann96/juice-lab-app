@@ -5,13 +5,19 @@ import {
   Object3DEventMap,
   PerspectiveCamera,
   Raycaster,
+  Scene,
   Vector2,
 } from "three";
 import { checkRayIntersections, getMouseVector2 } from "./rayCastHelper";
-import { OrbitControls } from "three/examples/jsm/Addons.js";
+import {
+  CSS2DObject,
+  CSS2DRenderer,
+  OrbitControls,
+} from "three/examples/jsm/Addons.js";
 import { navigationCoordinates } from "./navigationCoordinates";
 import { enableCameraControll, moveCamera } from "./cameraControls";
 import { Ref } from "vue";
+import { createView } from "./createView";
 
 const mouseEvents = (
   camera: PerspectiveCamera,
@@ -20,7 +26,11 @@ const mouseEvents = (
   navItems: string[],
   intersectedObject: Mesh | null,
   glowOnHoverObjects: Object3D<Object3DEventMap>[],
-  cameraOnFocus: Ref<boolean>
+  cameraOnFocus: Ref<boolean>,
+  htmlRenderer: CSS2DRenderer,
+  resetToStart: Function,
+  mainScene: Scene,
+  css2dObject: Ref<CSS2DObject | undefined>
 ) => {
   let mousePointer = new Vector2();
   const raycaster = new Raycaster();
@@ -40,7 +50,16 @@ const mouseEvents = (
     }
 
     if (navItems.includes(clickedObj.name)) {
-      onClick(clickedObj.name, camera, controls, cameraOnFocus);
+      onClick(
+        clickedObj.name,
+        camera,
+        controls,
+        cameraOnFocus,
+        htmlRenderer,
+        resetToStart,
+        mainScene,
+        css2dObject
+      );
     }
   };
 
@@ -84,10 +103,12 @@ const onClick = async (
   navItem: string,
   camera: PerspectiveCamera,
   controls: OrbitControls,
-  cameraOnFocus: Ref<boolean>
+  cameraOnFocus: Ref<boolean>,
+  htmlRenderer: CSS2DRenderer,
+  resetToStart: Function,
+  mainScene: Scene,
+  css2dObject: Ref<CSS2DObject | undefined>
 ) => {
-  console.log(`clicked on: ${navItem}`);
-
   const coordinates = navigationCoordinates.find(
     (item) => item.objectName === navItem
   );
@@ -96,13 +117,12 @@ const onClick = async (
     return;
   }
 
-  //TODO Wait till momentum stops completly  await new Promise((resolve) => setTimeout(resolve, 500));
-
   cameraOnFocus.value = true;
   enableCameraControll(controls, false);
   controls.update();
 
   await moveCamera(camera, coordinates.position, coordinates.rotation);
+  createView(coordinates, htmlRenderer, resetToStart, mainScene, css2dObject);
 };
 
 const updateEmissiveIntensity = (object, from: number, to: number) => {

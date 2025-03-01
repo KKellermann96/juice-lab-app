@@ -18,7 +18,7 @@ export const navigationCoordinates: NavigationConfig[] = [
   },
   {
     objectName: NavigationNames.game,
-    position: new Vector3(8, 4.5, 4.7),
+    position: new Vector3(8, 4.5, 4.694),
     rotation: new Vector3(0, Math.PI / 2, 0),
   },
   {
