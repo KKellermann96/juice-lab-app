@@ -18,6 +18,7 @@ import { navigationCoordinates } from "./navigationCoordinates";
 import { enableCameraControll, moveCamera } from "./cameraControls";
 import { Ref } from "vue";
 import { createView } from "./createView";
+import { ModelObject } from "../models";
 
 const mouseEvents = (
   camera: PerspectiveCamera,
@@ -30,7 +31,8 @@ const mouseEvents = (
   htmlRenderer: CSS2DRenderer,
   resetToStart: Function,
   mainScene: Scene,
-  css2dObject: Ref<CSS2DObject | undefined>
+  css2dObject: Ref<CSS2DObject | undefined>,
+  menuCardObject: ModelObject
 ) => {
   let mousePointer = new Vector2();
   const raycaster = new Raycaster();
@@ -58,7 +60,8 @@ const mouseEvents = (
         htmlRenderer,
         resetToStart,
         mainScene,
-        css2dObject
+        css2dObject,
+        menuCardObject
       );
     }
   };
@@ -107,7 +110,8 @@ const onClick = async (
   htmlRenderer: CSS2DRenderer,
   resetToStart: Function,
   mainScene: Scene,
-  css2dObject: Ref<CSS2DObject | undefined>
+  css2dObject: Ref<CSS2DObject | undefined>,
+  menuCardObject: ModelObject
 ) => {
   const coordinates = navigationCoordinates.find(
     (item) => item.objectName === navItem
@@ -122,7 +126,14 @@ const onClick = async (
   controls.update();
 
   await moveCamera(camera, coordinates.position, coordinates.rotation);
-  createView(coordinates, htmlRenderer, resetToStart, mainScene, css2dObject);
+  createView(
+    coordinates,
+    htmlRenderer,
+    resetToStart,
+    mainScene,
+    css2dObject,
+    menuCardObject
+  );
 };
 
 const updateEmissiveIntensity = (object, from: number, to: number) => {

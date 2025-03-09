@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
 import { startUp } from "./startUp";
-import { CSS2DRenderer, CSS3DRenderer } from "three/examples/jsm/Addons.js";
+import { CSS2DRenderer } from "three/examples/jsm/Addons.js";
 
 const modelPath = "/model/scene.glb";
 const threeCanvas = ref<HTMLCanvasElement | null>(null);
@@ -9,6 +9,9 @@ const threeCanvas = ref<HTMLCanvasElement | null>(null);
 let htmlRenderer = new CSS2DRenderer();
 
 onMounted(() => {
+  document.addEventListener("wheel", preventZoom, { passive: false });
+  document.addEventListener("keydown", preventKeyboardZoom);
+
   htmlRenderer.setSize(window.innerWidth, window.innerHeight);
   htmlRenderer.domElement.style.position = "absolute";
   htmlRenderer.domElement.style.top = "0px";
@@ -18,11 +21,29 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  document.removeEventListener("wheel", preventZoom);
+  document.removeEventListener("keydown", preventKeyboardZoom);
+
   if (htmlRenderer) {
     document.body.removeChild(htmlRenderer.domElement);
     htmlRenderer = null;
   }
 });
+
+const preventZoom = (event: WheelEvent) => {
+  if (event.ctrlKey) {
+    event.preventDefault();
+  }
+};
+
+const preventKeyboardZoom = (event: KeyboardEvent) => {
+  if (
+    event.ctrlKey &&
+    (event.key === "+" || event.key === "-" || event.key === "0")
+  ) {
+    event.preventDefault();
+  }
+};
 </script>
 
 <template>

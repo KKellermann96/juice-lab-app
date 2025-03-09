@@ -26,6 +26,9 @@ const tailwindConfig: Config = {
         400: "#1D5E18",
         500: "#144314",
       },
+      turquoise: {
+        100: "#548365",
+      },
       yellow: {
         100: "#F8E2A3",
         200: "#F4C23D",
@@ -46,6 +49,15 @@ const tailwindConfig: Config = {
         300: "#3D91D3",
         400: "#267BB7",
         500: "#1C5D8E",
+        600: "#0f172a",
+        700: "#272e3f",
+      },
+      Mint: {
+        100: "#D6E7E3",
+        200: "#B6D7CF",
+        300: "#9CC4BB",
+        400: "#75A89D",
+        500: "#4E8C81",
       },
       black: "#000000",
       white: "#FFFFFF",
@@ -84,6 +96,11 @@ const tailwindConfig: Config = {
       normal: "400",
       "semi-bold": "600",
     },
+    extend: {
+      fontFamily: {
+        georgia: ["Georgia", "serif"],
+      },
+    },
     screens: {
       xs: "375px",
       sm: "720px",
@@ -94,6 +111,12 @@ const tailwindConfig: Config = {
     borderRadius: {
       none: "0",
       DEFAULT: "1px",
+      sm: "0.125rem",
+      md: "0.375rem",
+      lg: "0.5rem",
+      xl: "0.75rem",
+      "2xl": "1rem",
+      "3xl": "1.5rem",
       full: "9999px",
     },
   },

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import FancyButton from "../shared/FancyButton.vue";
 
 defineProps({
@@ -24,9 +24,9 @@ onMounted(() => (show.value = true));
         class="w-[70%] flex justify-between flex-wrap"
       >
         <div class="text-white w-[35rem] mb-[5rem]">
-          <h1 class="text-[5rem] mb-5">Credits</h1>
+          <h1 class="text-[5rem] mb-4">Credits</h1>
 
-          <div class="flex flex-col gap-5">
+          <div class="flex flex-col gap-4">
             <div class="flex flex-col gap-3">
               <h2 class="text-[2rem]">Developed by:</h2>
               <li><span class="font-semi-bold">Kristian Kellermann</span></li>
@@ -65,6 +65,10 @@ onMounted(() => (show.value = true));
               <li>
                 GLTFLoader from <span class="font-semi-bold">mrdoob</span>
               </li>
+              <li>
+                GSAP from
+                <span class="font-semi-bold">GreenSock (Jack Doyle)</span>
+              </li>
             </div>
 
             <div class="flex flex-col gap-3">
@@ -73,10 +77,10 @@ onMounted(() => (show.value = true));
             </div>
           </div>
         </div>
-        <div class="flex items-end">
+        <div class="flex items-end mb-[-80px]">
           <FancyButton
             :action="goBack"
-            icon="backIcon"
+            icon="home"
             :size="3"
             color="purple"
             text="Go Back"
@@ -87,15 +91,3 @@ onMounted(() => (show.value = true));
     </Transition>
   </div>
 </template>
-
-<style>
-/* Fade transition using Tailwind classes */
-.fade-enter-active,
-.fade-leave-active {
-  @apply transition-opacity duration-500;
-}
-.fade-enter-from,
-.fade-leave-to {
-  @apply opacity-0;
-}
-</style>

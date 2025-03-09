@@ -4,11 +4,9 @@ Inspired by Jesse Zhou (https://jesse-zhou.medium.com/jesses-ramen-case-study-77
 
 ## TODO
 
-- Navigation Screens (2/4)
 - Loading Screen
-- Ground looks pixelated
-- Mixers are black
-- Arcade controll is black
+- Cant select text in CSS2DRenderer
+- Destroy video objects
 - If camera looks at a specific angle, disable the nav buttons
-- Buttons at the vending machine should be lit up (warm light)
+- Decrease bloom on side panel and change bg of videos (also decrease bloom on text)
 - Add Database and highscore system in game view

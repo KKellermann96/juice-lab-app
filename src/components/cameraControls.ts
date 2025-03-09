@@ -50,11 +50,6 @@ export const moveCamera = async (
       duration,
       ease: "power1.inOut",
     }),
-    // y axsis rotation
-    //right 0
-    //left Math.PI ,
-    //front Math.PI / 2,
-    //back Math.PI / -2,
   ]);
 };
 

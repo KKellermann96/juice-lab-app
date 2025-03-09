@@ -1,22 +1,13 @@
 import {
   AmbientLight,
-  BufferGeometry,
   Clock,
-  DoubleSide,
-  Float32BufferAttribute,
-  LinearFilter,
   Mesh,
-  MeshBasicMaterial,
   Object3D,
   Object3DEventMap,
   PerspectiveCamera,
-  PlaneGeometry,
-  RGBFormat,
   Scene,
-  SRGBColorSpace,
   Vector2,
   Vector3,
-  VideoTexture,
 } from "three";
 import { ref, Ref } from "vue";
 import { sceneRenderer } from "./sceneRenderer";
@@ -36,6 +27,7 @@ import { NavigationNames } from "../models/navigationNames";
 import mouseEvents from "./mouseEvents";
 import { initClickableObjects } from "./navigationHelper";
 import { addVideo } from "../addVideo";
+import { ModelObject, ModelNames } from "../models";
 
 export const startUp = async (
   canvas: Ref<HTMLCanvasElement | null>,
@@ -75,15 +67,22 @@ export const startUp = async (
   const model = gltf.scene;
 
   let glowOnHoverObjects: Object3D<Object3DEventMap>[] = [];
+  const menuCardObject = new ModelObject();
   model.traverse((child) => {
     // Renamed the mesh in blender like NavigationNames enum and added "Text" behind it
     if (navItems.map((item) => item + "Text").includes(child.name)) {
       glowOnHoverObjects.push(child);
+    } else if (child.name === ModelNames.menuCard) {
+      menuCardObject.object = child;
+      menuCardObject.position.copy(child.position);
+      menuCardObject.rotation.copy(child.rotation);
     }
   });
 
   mainScene.add(model);
 
+  // TODO these videos lag the game tremendously
+  // Decrease file size and destroy videos onUnMount
   addVideo(
     "/videos/sideDisplay.mp4",
     new Vector3(-4.65, 9.3, -6.75),
@@ -127,27 +126,12 @@ export const startUp = async (
     htmlRenderer,
     resetToStart,
     mainScene,
-    css2dObject
+    css2dObject,
+    menuCardObject
   );
 
   window.addEventListener("click", onMouseClick, false);
   window.addEventListener("mousemove", onMouseMove, false);
-
-  // ---------------------------------------------
-  //                T E S T I N G
-  // ---------------------------------------------
-
-  //Remove if not needed
-  window.addEventListener("keydown", async (event) => {
-    // Check if the pressed key is "g" or "G"
-    if (event.key === "h" || event.key === "H") {
-      resetToStart();
-    }
-  });
-
-  // ---------------------------------------------
-  //                T E S T I N G
-  // ---------------------------------------------
 
   // Handle window resize
   window.addEventListener("resize", () => {

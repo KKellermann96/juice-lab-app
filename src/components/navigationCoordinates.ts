@@ -13,7 +13,7 @@ export const navigationCoordinates: NavigationConfig[] = [
   },
   {
     objectName: NavigationNames.projects,
-    position: new Vector3(-3.3, 4.4, -10),
+    position: new Vector3(-3.272, 4.36, -9.7),
     rotation: new Vector3(0, Math.PI, 0),
   },
   {

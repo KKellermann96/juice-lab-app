@@ -1,0 +1,81 @@
+<script lang="ts" setup>
+import { ref } from "vue";
+import FancyButton from "../shared/FancyButton.vue";
+import ProjectCard from "../components/project/ProjectCard.vue";
+import ProjectDescription from "../components/project/ProjectDescription.vue";
+import { projectItems } from "../components/project/projectItems";
+
+defineProps({
+  goBack: {
+    type: Function,
+    default: () => {},
+  },
+});
+
+const selectedProjectId = ref<number | undefined>(undefined);
+
+const projectsContainer = ref<HTMLDivElement | null>(null);
+defineExpose({ projectsContainer });
+</script>
+
+<template>
+  <div
+    ref="projectsContainer"
+    class="h-screen w-screen flex justify-center items-center"
+  >
+    <div
+      class="relative border-b border-t border-black w-[54.8rem] h-[72.8rem] bg-Mint-300 py-5 px-4 rounded-[50px]"
+    >
+      <Transition name="fade" mode="out-in">
+        <div v-if="selectedProjectId != undefined">
+          <ProjectDescription
+            :imgPath="projectItems[selectedProjectId].imgSrc"
+            :title="projectItems[selectedProjectId].title"
+            :description="projectItems[selectedProjectId].description"
+          ></ProjectDescription>
+        </div>
+        <div
+          v-else
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 h-[57rem] overflow-y-auto p-3 mb-3"
+        >
+          <div
+            v-for="(item, i) in projectItems"
+            :key="i"
+            class="flex justify-center"
+          >
+            <ProjectCard
+              :title="item.title"
+              :imgPath="item.imgSrc"
+              :disable="item.imgSrc.startsWith('can')"
+              @onClick="selectedProjectId = i"
+            ></ProjectCard>
+          </div>
+        </div>
+      </Transition>
+      <div class="absolute bottom-5 w-[51rem] flex justify-between">
+        <FancyButton
+          v-if="selectedProjectId != undefined"
+          :action="
+            () => {
+              selectedProjectId = undefined;
+            }
+          "
+          icon="backIcon"
+          :size="3"
+          color="blue"
+          text="Projects"
+        >
+        </FancyButton>
+        <div v-else></div>
+        <FancyButton
+          :action="goBack"
+          icon="home"
+          :size="3"
+          color="purple"
+          text="Go Back"
+        >
+        </FancyButton>
+      </div>
+    </div>
+  </div>
+</template>

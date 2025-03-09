@@ -42,7 +42,7 @@ const isHovered = ref(false);
   >
     <div class="flex items-center justify-center">
       <img
-        :src="`/src/assets/icons/${icon}.svg`"
+        :src="`/icons/${icon}.svg`"
         :alt="icon"
         :style="{
           height: `${size}rem`,
