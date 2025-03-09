@@ -62,7 +62,7 @@ defineExpose({ aboutMeContainer });
 <template>
   <div
     ref="aboutMeContainer"
-    class="relative h-screen w-screen flex justify-center items-center"
+    class="relative h-screen w-screen flex justify-center items-center !select-text"
   >
     <!-- Default View -->
     <Transition name="fade">
@@ -160,18 +160,28 @@ defineExpose({ aboutMeContainer });
               <div class="flex flex-col gap-2 items-baseline">
                 <li>
                   📩
-                  <span class="font-semi-bold">Email:</span>
+                  <span class="font-semi-bold">Email: </span>
                   kristian.kellermann@outlook.com
                 </li>
                 <li>
                   🔗
-                  <span class="font-semi-bold">GitHub:</span>
-                  https://github.com/KKellermann96
+                  <span class="font-semi-bold">GitHub: </span>
+                  <a
+                    class="underline text-blue-500"
+                    href="https://github.com/KKellermann96"
+                    target="_blank"
+                    >https://github.com/KKellermann96</a
+                  >
                 </li>
                 <li>
                   💼
-                  <span class="font-semi-bold">LinkedIn:</span>
-                  https://de.linkedin.com/in/kristian-kellermann
+                  <span class="font-semi-bold">LinkedIn: </span>
+                  <a
+                    class="underline text-blue-500"
+                    href="https://www.linkedin.com/in/kristian-kellermann-50938327a"
+                    target="_blank"
+                    >https://de.linkedin.com/in/kristian-kellermann</a
+                  >
                 </li>
               </div>
             </div>

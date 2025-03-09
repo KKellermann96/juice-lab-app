@@ -1,6 +1,7 @@
 import {
   AmbientLight,
   Clock,
+  LoadingManager,
   Mesh,
   Object3D,
   Object3DEventMap,
@@ -8,6 +9,7 @@ import {
   Scene,
   Vector2,
   Vector3,
+  VideoTexture,
 } from "three";
 import { ref, Ref } from "vue";
 import { sceneRenderer } from "./sceneRenderer";
@@ -29,10 +31,16 @@ import { initClickableObjects } from "./navigationHelper";
 import { addVideo } from "../addVideo";
 import { ModelObject, ModelNames } from "../models";
 
+//Total items in the scene
+const TOTAL_ITEMS = 25;
+
 export const startUp = async (
   canvas: Ref<HTMLCanvasElement | null>,
   modelPath: string,
-  htmlRenderer: CSS2DRenderer
+  htmlRenderer: CSS2DRenderer,
+  videoElements: Ref<HTMLVideoElement[]>,
+  videoTextures: Ref<VideoTexture[]>,
+  progress: Ref<number>
 ) => {
   if (!canvas.value) return;
 
@@ -62,14 +70,13 @@ export const startUp = async (
 
   let clickableObjects = initClickableObjects(mainScene, navItems);
 
-  const gltf = await loadGLBModel(modelPath);
+  const gltf = await loadGLBModel(modelPath, progress);
 
   const model = gltf.scene;
 
   let glowOnHoverObjects: Object3D<Object3DEventMap>[] = [];
   const menuCardObject = new ModelObject();
   model.traverse((child) => {
-    // Renamed the mesh in blender like NavigationNames enum and added "Text" behind it
     if (navItems.map((item) => item + "Text").includes(child.name)) {
       glowOnHoverObjects.push(child);
     } else if (child.name === ModelNames.menuCard) {
@@ -87,14 +94,18 @@ export const startUp = async (
     "/videos/sideDisplay.mp4",
     new Vector3(-4.65, 9.3, -6.75),
     new Vector2(32, 17),
-    mainScene
+    mainScene,
+    videoElements,
+    videoTextures
   );
 
   addVideo(
     "/videos/projects.mp4",
     new Vector3(-1.55, 3.35, -7.45),
     new Vector2(8.5, 26),
-    mainScene
+    mainScene,
+    videoElements,
+    videoTextures
   );
 
   const clock = new Clock();
@@ -161,9 +172,18 @@ export const startUp = async (
   animate();
 };
 
-const loadGLBModel = async (modelPath: string): Promise<GLTF> => {
+const loadGLBModel = async (
+  modelPath: string,
+  progress: Ref<number>
+): Promise<GLTF> => {
   try {
-    const loader = new GLTFLoader();
+    const loadingManager = new LoadingManager();
+
+    loadingManager.onProgress = function (url, loaded, total) {
+      progress.value = Math.floor((loaded / TOTAL_ITEMS) * 100);
+    };
+
+    const loader = new GLTFLoader(loadingManager);
     const gltf = await loader.loadAsync(modelPath);
     return gltf;
   } catch (error) {

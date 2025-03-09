@@ -51,7 +51,7 @@ defineExpose({ gunRunnerContainer });
     class="w-screen h-screen flex items-center justify-center pt-[4.3rem] pb-[5.4rem]"
   >
     <div
-      class="relative w-[79.7rem] h-full bg-arcade-100 flex flex-col items-center"
+      class="relative w-[80.2rem] h-full bg-arcade-100 flex flex-col items-center"
     >
       <div class="h-[4rem] w-full bg-black z-10"></div>
       <img
