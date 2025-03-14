@@ -25,7 +25,7 @@ defineProps({
       />
     </div>
     <h2 class="mb-3">{{ title }}</h2>
-    <div class="w-full h-[25rem] p-3">
+    <div class="w-full h-[25rem] p-3 overflow-auto">
       <span class="text-[1.1rem]" v-html="description"></span>
     </div>
   </div>
