@@ -21,7 +21,7 @@ onMounted(() => (show.value = true));
       <div
         v-show="show"
         ref="creditsContainer"
-        class="w-[70%] flex justify-between flex-wrap"
+        class="w-[70%] flex flex-wrap justify-between"
       >
         <div class="text-white w-[35rem] mb-[5rem]">
           <h1 class="text-[5rem] mb-4">Credits</h1>
@@ -77,17 +77,16 @@ onMounted(() => (show.value = true));
             </div>
           </div>
         </div>
-        <div class="flex items-end mb-[-80px]">
-          <FancyButton
-            :action="goBack"
-            icon="home"
-            :size="3"
-            color="purple"
-            text="Go Back"
-          >
-          </FancyButton>
+        <div class="flex items-end">
+          <FancyButton :action="goBack" icon="home"> </FancyButton>
         </div>
       </div>
     </Transition>
   </div>
 </template>
+
+<style>
+li {
+  @apply ml-4;
+}
+</style>

@@ -16,10 +16,10 @@ defineProps({
 </script>
 
 <template>
-  <div>
-    <div class="w-full h-[30rem] bg-arcade-300 mb-3 border">
+  <div class="w-[30rem] sm:w-full">
+    <div class="w-full h-[20rem] sm:h-[30rem] mb-3">
       <img
-        class="w-full h-full"
+        class="w-full h-[20rem] sm:h-full border"
         :src="`/images/${imgPath}`"
         :alt="`${imgPath}`"
       />

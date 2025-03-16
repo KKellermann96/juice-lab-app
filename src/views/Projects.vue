@@ -21,13 +21,11 @@ defineExpose({ projectsContainer });
 <template>
   <div
     ref="projectsContainer"
-    class="h-screen w-screen flex justify-center items-center"
+    class="w-[54.8rem] h-[72.8rem] flex justify-center items-center"
   >
-    <div
-      class="relative border-b border-t border-black w-[54.8rem] h-[72.8rem] bg-Mint-300 py-5 px-4 rounded-[50px]"
-    >
+    <div class="relative w-full h-full bg-Mint-300 py-5 px-4 rounded-[50px]">
       <Transition name="fade" mode="out-in">
-        <div v-if="selectedProjectId != undefined">
+        <div v-if="selectedProjectId != undefined" class="flex justify-center">
           <ProjectDescription
             :imgPath="projectItems[selectedProjectId].imgSrc"
             :title="projectItems[selectedProjectId].title"
@@ -52,7 +50,9 @@ defineExpose({ projectsContainer });
           </div>
         </div>
       </Transition>
-      <div class="absolute bottom-5 w-[51rem] flex justify-between">
+      <div
+        class="absolute bottom-5 w-[51rem] flex justify-center sm:justify-between gap-x-2"
+      >
         <FancyButton
           v-if="selectedProjectId != undefined"
           :action="
@@ -60,21 +60,11 @@ defineExpose({ projectsContainer });
               selectedProjectId = undefined;
             }
           "
-          icon="backIcon"
-          :size="3"
-          color="blue"
-          text="Projects"
+          icon="back"
         >
         </FancyButton>
         <div v-else></div>
-        <FancyButton
-          :action="goBack"
-          icon="home"
-          :size="3"
-          color="purple"
-          text="Go Back"
-        >
-        </FancyButton>
+        <FancyButton :action="goBack" icon="home"> </FancyButton>
       </div>
     </div>
   </div>

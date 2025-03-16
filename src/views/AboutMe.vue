@@ -190,7 +190,7 @@ defineExpose({ aboutMeContainer });
         <div class="flex justify-center items-center">
           <span class="font-semi-bold text-[1.4rem]">- Scroll down</span>
           <img
-            src="/icons/scrollDownIcon.jpg"
+            src="/icons/scrollDownIcon.png"
             alt="scrollDown"
             class="h-[2.5rem]"
           />
@@ -200,12 +200,9 @@ defineExpose({ aboutMeContainer });
     </Transition>
 
     <FancyButton
-      class="absolute bottom-5 right-5"
+      class="absolute sm:translate-x-[580px] translate-y-[580px]"
       :action="reset"
       icon="home"
-      :size="3"
-      color="purple"
-      text="Go Back"
     >
     </FancyButton>
   </div>

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { startUp } from "./startUp";
-import { CSS2DRenderer } from "three/examples/jsm/Addons.js";
+import { CSS3DRenderer } from "three/examples/jsm/Addons.js";
 import { VideoTexture } from "three";
 
 const modelPath = "/model/scene.glb";
 const threeCanvas = ref<HTMLCanvasElement | null>(null);
 const progress = ref(0);
 
-let htmlRenderer = new CSS2DRenderer();
+let htmlRenderer = new CSS3DRenderer();
 const videoElements = ref<HTMLVideoElement[]>([]);
 const videoTextures = ref<VideoTexture[]>([]);
 
@@ -76,21 +76,33 @@ const progressStage = computed(() => {
   else if (progress.value < 80) return 3;
   else return 4;
 });
+
+const removeLoadingScreen = ref(false);
+
+watch(progress, (newValue) => {
+  if (newValue >= 100) {
+    setTimeout(() => {
+      removeLoadingScreen.value = true;
+    }, 1000);
+  }
+});
 </script>
 
 <template>
-  <div
-    id="progress-bar-container"
-    class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-black flex flex-col justify-center items-center"
-    :style="{ display: progress >= 100 ? 'none' : 'flex' }"
-  >
+  <Transition name="fade">
     <div
-      class="apple-sprite"
-      :style="{ backgroundPosition: `-${progressStage * 100}% 0` }"
-    ></div>
-    <label class="text-white text-[2rem]">Loading...</label>
-    <span class="text-white text-[2rem]">{{ progress }}%</span>
-  </div>
+      id="progress-bar-container"
+      class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-black flex flex-col justify-center items-center"
+      v-if="!removeLoadingScreen"
+    >
+      <div
+        class="apple-sprite"
+        :style="{ backgroundPosition: `-${progressStage * 100}% 0` }"
+      ></div>
+      <label class="text-white text-[2rem]">Loading...</label>
+      <span class="text-white text-[2rem]">{{ progress }}%</span>
+    </div>
+  </Transition>
   <canvas ref="threeCanvas" class="w-full h-full"></canvas>
 </template>
 

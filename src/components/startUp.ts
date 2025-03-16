@@ -19,8 +19,8 @@ import {
   resetCamera,
 } from "./cameraControls";
 import {
-  CSS2DObject,
-  CSS2DRenderer,
+  CSS3DObject,
+  CSS3DRenderer,
   GLTF,
   GLTFLoader,
 } from "three/examples/jsm/Addons.js";
@@ -37,7 +37,7 @@ const TOTAL_ITEMS = 25;
 export const startUp = async (
   canvas: Ref<HTMLCanvasElement | null>,
   modelPath: string,
-  htmlRenderer: CSS2DRenderer,
+  htmlRenderer: CSS3DRenderer,
   videoElements: Ref<HTMLVideoElement[]>,
   videoTextures: Ref<VideoTexture[]>,
   progress: Ref<number>
@@ -114,11 +114,11 @@ export const startUp = async (
   let intersectedObject: Mesh | null = null;
   let cameraOnFocus = ref(false);
 
-  const css2dObject = ref<CSS2DObject | undefined>(undefined);
+  const css3dObject = ref<CSS3DObject | undefined>(undefined);
 
   const resetToStart = async () => {
-    mainScene.remove(css2dObject.value);
-    css2dObject.value = undefined;
+    mainScene.remove(css3dObject.value);
+    css3dObject.value = undefined;
     await resetCamera(camera);
 
     cameraOnFocus.value = false;
@@ -137,7 +137,7 @@ export const startUp = async (
     htmlRenderer,
     resetToStart,
     mainScene,
-    css2dObject,
+    css3dObject,
     menuCardObject
   );
 

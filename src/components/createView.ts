@@ -1,6 +1,6 @@
 import { createApp, Ref } from "vue";
 import { ModelObject, NavigationConfig, NavigationNames } from "../models";
-import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/Addons.js";
+import { CSS3DObject, CSS3DRenderer } from "three/examples/jsm/Addons.js";
 import { Scene } from "three";
 import { moveMesh } from "./moveObject";
 import GunRunner from "../views/GunRunner.vue";
@@ -10,12 +10,13 @@ import Projects from "../views/Projects.vue";
 
 export const createView = (
   coordinates: NavigationConfig,
-  htmlRenderer: CSS2DRenderer,
+  htmlRenderer: CSS3DRenderer,
   resetToStart: Function,
   mainScene: Scene,
-  css2dObject: Ref<CSS2DObject | undefined>,
+  css3dObject: Ref<CSS3DObject | undefined>,
   menuCardObject: ModelObject
 ) => {
+  // A B O U T  M E
   if (coordinates.objectName === NavigationNames.aboutMe) {
     const vueApp = createApp(AboutMe, {
       goBack: resetToStart,
@@ -25,14 +26,18 @@ export const createView = (
     const instance = vueApp.mount(document.createElement("div"));
     const aboutMeElement = (instance as any).aboutMeContainer;
 
-    css2dObject.value = new CSS2DObject(aboutMeElement);
-    css2dObject.value.position.set(
+    css3dObject.value = new CSS3DObject(aboutMeElement);
+    css3dObject.value.position.set(
       coordinates.position.x - 0.5,
       coordinates.position.y,
       coordinates.position.z + 0.21
     );
-    mainScene.add(css2dObject.value);
+    css3dObject.value.rotation.y = Math.PI / 2 + 0.4;
+    css3dObject.value.scale.set(0.000649, 0.000649, 0.000649);
+
+    mainScene.add(css3dObject.value);
     htmlRenderer.domElement.style.pointerEvents = "auto";
+    // P R O J E C T S
   } else if (coordinates.objectName === NavigationNames.projects) {
     const vueApp = createApp(Projects, {
       goBack: resetToStart,
@@ -40,14 +45,17 @@ export const createView = (
     const instance = vueApp.mount(document.createElement("div"));
     const projectsElement = (instance as any).projectsContainer;
 
-    css2dObject.value = new CSS2DObject(projectsElement);
-    css2dObject.value.position.set(
+    css3dObject.value = new CSS3DObject(projectsElement);
+    css3dObject.value.position.set(
       coordinates.position.x,
       coordinates.position.y,
       coordinates.position.z + 0.5
     );
-    mainScene.add(css2dObject.value);
+    css3dObject.value.rotation.y = Math.PI;
+    css3dObject.value.scale.set(0.0006, 0.0006, 0.0006);
+    mainScene.add(css3dObject.value);
     htmlRenderer.domElement.style.pointerEvents = "auto";
+    // C R E D I T S
   } else if (coordinates.objectName === NavigationNames.credits) {
     const vueApp = createApp(Credits, {
       goBack: resetToStart,
@@ -55,14 +63,17 @@ export const createView = (
     const instance = vueApp.mount(document.createElement("div"));
     const creditsElement = (instance as any).creditsContainer;
 
-    css2dObject.value = new CSS2DObject(creditsElement);
-    css2dObject.value.position.set(
+    css3dObject.value = new CSS3DObject(creditsElement);
+    css3dObject.value.position.set(
       coordinates.position.x - 0.5,
       coordinates.position.y,
       coordinates.position.z
     );
-    mainScene.add(css2dObject.value);
+    css3dObject.value.rotation.y = Math.PI / 2 + 0.1;
+    css3dObject.value.scale.set(0.00065, 0.00065, 0.00065);
+    mainScene.add(css3dObject.value);
     htmlRenderer.domElement.style.pointerEvents = "auto";
+    // G A M E
   } else if (coordinates.objectName === NavigationNames.game) {
     const vueApp = createApp(GunRunner, {
       goBack: resetToStart,
@@ -70,13 +81,15 @@ export const createView = (
     const instance = vueApp.mount(document.createElement("div"));
     const gunRunnerElement = (instance as any).gunRunnerContainer;
 
-    css2dObject.value = new CSS2DObject(gunRunnerElement);
-    css2dObject.value.position.set(
+    css3dObject.value = new CSS3DObject(gunRunnerElement);
+    css3dObject.value.position.set(
       coordinates.position.x - 0.5,
       coordinates.position.y,
       coordinates.position.z
     );
-    mainScene.add(css2dObject.value);
+    css3dObject.value.rotation.y = Math.PI / 2;
+    css3dObject.value.scale.set(0.000598, 0.000598, 0.000598);
+    mainScene.add(css3dObject.value);
     htmlRenderer.domElement.style.pointerEvents = "auto";
   }
 };

@@ -99,6 +99,7 @@ const tailwindConfig: Config = {
     extend: {
       fontFamily: {
         georgia: ["Georgia", "serif"],
+        pixel: ['"Press Start 2P"', "cursive"],
       },
     },
     screens: {

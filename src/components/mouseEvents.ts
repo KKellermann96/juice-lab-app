@@ -10,8 +10,8 @@ import {
 } from "three";
 import { checkRayIntersections, getMouseVector2 } from "./rayCastHelper";
 import {
-  CSS2DObject,
-  CSS2DRenderer,
+  CSS3DObject,
+  CSS3DRenderer,
   OrbitControls,
 } from "three/examples/jsm/Addons.js";
 import { navigationCoordinates } from "./navigationCoordinates";
@@ -28,10 +28,10 @@ const mouseEvents = (
   intersectedObject: Mesh | null,
   glowOnHoverObjects: Object3D<Object3DEventMap>[],
   cameraOnFocus: Ref<boolean>,
-  htmlRenderer: CSS2DRenderer,
+  htmlRenderer: CSS3DRenderer,
   resetToStart: Function,
   mainScene: Scene,
-  css2dObject: Ref<CSS2DObject | undefined>,
+  css3dObject: Ref<CSS3DObject | undefined>,
   menuCardObject: ModelObject
 ) => {
   let mousePointer = new Vector2();
@@ -60,7 +60,7 @@ const mouseEvents = (
         htmlRenderer,
         resetToStart,
         mainScene,
-        css2dObject,
+        css3dObject,
         menuCardObject
       );
     }
@@ -107,10 +107,10 @@ const onClick = async (
   camera: PerspectiveCamera,
   controls: OrbitControls,
   cameraOnFocus: Ref<boolean>,
-  htmlRenderer: CSS2DRenderer,
+  htmlRenderer: CSS3DRenderer,
   resetToStart: Function,
   mainScene: Scene,
-  css2dObject: Ref<CSS2DObject | undefined>,
+  css3dObject: Ref<CSS3DObject | undefined>,
   menuCardObject: ModelObject
 ) => {
   const coordinates = navigationCoordinates.find(
@@ -131,7 +131,7 @@ const onClick = async (
     htmlRenderer,
     resetToStart,
     mainScene,
-    css2dObject,
+    css3dObject,
     menuCardObject
   );
 };

@@ -21,7 +21,7 @@ const emits = defineEmits<{
 
 <template>
   <button
-    class="w-full max-w-[16rem] h-[16.2rem] border rounded-xl text-start transition-transform transform shadow-md flex flex-col justify-start items-start"
+    class="w-full max-w-[16rem] h-[16.2rem] border text-start transition-transform transform shadow-md flex flex-col justify-start items-start"
     :class="{
       'scale-105 hover:scale-110 active:scale-[1.08] hover:shadow-xl': !disable,
     }"
@@ -29,12 +29,12 @@ const emits = defineEmits<{
     @click="emits('onClick')"
   >
     <img
-      class="h-[9rem] w-full border-b rounded-t-xl"
+      class="h-[9rem] w-full border-b"
       :src="`/images/${imgPath}`"
       :alt="`${imgPath}`"
     />
     <div
-      class="h-[7.09rem] w-full pb-3 rounded-b-xl flex flex-col justify-between px-2 pt-1 bg-Mint-400 text-white items-start"
+      class="h-[7.09rem] w-full pb-3 flex flex-col justify-between px-2 pt-1 bg-Mint-400 text-white items-start"
     >
       <span class="font-semi-bold text-[1.1rem] leading-6 mb-2">{{
         title
@@ -42,7 +42,7 @@ const emits = defineEmits<{
 
       <button
         v-if="!disable"
-        class="p-1 mt-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+        class="p-1 mt-2 bg-blue-600 text-white hover:bg-blue-700 transition"
       >
         View Project
       </button>
