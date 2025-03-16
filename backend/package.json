@@ -1,0 +1,17 @@
+{
+  "name": "juice-lab-sqlite-app",
+  "version": "1.0.0",
+  "description": "Express app with SQLite using better-sqlite3",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.9.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "author": "Kristian kellermann",
+  "license": "ISC"
+}
