@@ -2,12 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "chrome",
+      "name": "Run Frontend",
+      "type": "node",
       "request": "launch",
-      "name": "Launch Chrome",
-      "url": "http://localhost:5173/",
-      "webRoot": "${workspaceFolder}",
-      "preLaunchTask": "run dev server"
+      "cwd": "${workspaceFolder}/frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "console": "integratedTerminal"
     }
   ]
 }
