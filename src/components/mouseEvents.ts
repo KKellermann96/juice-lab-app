@@ -51,7 +51,7 @@ const mouseEvents = (
       return;
     }
 
-    if (navItems.includes(clickedObj.name)) {
+    if (navItems.includes(clickedObj.name) && !cameraOnFocus.value) {
       onClick(
         clickedObj.name,
         camera,
