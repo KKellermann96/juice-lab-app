@@ -1,10 +1,19 @@
 import express from "express";
+import cors from "cors";
 import SQLite from "better-sqlite3";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: process.env.FRONTEND_ORIGIN,
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 
 app.use(express.json());
 

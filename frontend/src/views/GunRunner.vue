@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref } from "vue";
 import FancyButton from "../shared/FancyButton.vue";
+import { Highscore } from "../models";
+import { highscoreService } from "../services";
 
 const gameUrl = ref("/game/gunRunner/index.html");
 const distance = ref(0);
@@ -32,7 +34,14 @@ const handleMessage = (event: MessageEvent) => {
   }
 };
 
+const allHighscores = ref<Highscore[]>([]);
+
+const fetchHighscores = async () => {
+  allHighscores.value = await highscoreService.getHighscores();
+};
+
 onMounted(() => {
+  fetchHighscores();
   window.addEventListener("message", handleMessage);
 });
 
@@ -141,14 +150,22 @@ defineExpose({ gunRunnerContainer });
               <hr class="w-[21rem] h-[1px] border-t-0 bg-white mb-2" />
             </div>
             <!-- TODO: Add Highscore system -->
-            <!-- <div class="flex flex-col gap-1 h-[10rem] overflow-y-auto">
-              <li class="text-arcade-200">1. User1: 1000m</li>
-              <li class="text-arcade-300">2. User2: 840m</li>
-              <li class="text-arcade-400">3. User3: 839m</li>
-              <li v-for="i in 47" :key="i">
-                {{ i + 4 }}. {{ "User " + i }}: {{ i + 100 }}
-              </li>
-            </div> -->
+            <div
+              v-if="allHighscores.length"
+              class="flex flex-col gap-1 h-[10rem] overflow-y-auto"
+            >
+              <span
+                v-for="(highscore, idx) in allHighscores"
+                :key="highscore.name"
+                :class="{
+                  'text-arcade-200': idx === 0,
+                  'text-arcade-300': idx === 1,
+                  'text-arcade-400': idx === 2,
+                }"
+              >
+                {{ `${idx + 1}. ${highscore.name}: ${highscore.score}m` }}
+              </span>
+            </div>
             <span class="mt-3 text-[1.7rem]"
               >Your best score: {{ distance }}m</span
             >
