@@ -1,23 +1,28 @@
 import express from "express";
 import cors from "cors";
 import SQLite from "better-sqlite3";
+import cookieParser from "cookie-parser";
+import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
+import generateUniquePlayername from "./playernameGenerator.js";
 
 dotenv.config();
 
 const app = express();
+
+app.use(cookieParser());
+app.use(express.json());
 
 app.use(
   cors({
     origin: process.env.FRONTEND_ORIGIN,
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
+    credentials: true,
   })
 );
 
-app.use(express.json());
-
-const db = new SQLite("highscores.db", { verbose: console.log });
+const db = new SQLite("database.db", { verbose: console.log });
 
 const createTable = db.prepare(`
   CREATE TABLE IF NOT EXISTS highscore (
@@ -28,6 +33,47 @@ const createTable = db.prepare(`
   )
 `);
 createTable.run();
+
+const createPlayerTable = db.prepare(`
+  CREATE TABLE IF NOT EXISTS players (
+    id TEXT PRIMARY KEY,
+    playername TEXT NOT NULL
+  )
+`);
+createPlayerTable.run();
+
+app.get("/playername", (req, res) => {
+  let playerId = req.cookies.playerId;
+
+  if (playerId) {
+    // Check if the player exists in the DB
+    const player = db
+      .prepare("SELECT playername FROM players WHERE id = ?")
+      .get(playerId);
+    if (player) {
+      return res.json({ playername: player.playername });
+    }
+  }
+
+  // Generate new ID and random playername
+  playerId = uuidv4();
+  const randomPlayername = generateUniquePlayername();
+
+  // Store in the database
+  db.prepare("INSERT INTO players (id, playername) VALUES (?, ?)").run(
+    playerId,
+    randomPlayername
+  );
+
+  res.cookie("playerId", playerId, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    maxAge: 94608000000,
+  });
+
+  res.json({ playername: randomPlayername });
+});
 
 app.get("/highscores", (req, res) => {
   try {

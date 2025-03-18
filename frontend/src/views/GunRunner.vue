@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import FancyButton from "../shared/FancyButton.vue";
 import { Highscore } from "../models";
-import { highscoreService } from "../services";
+import { highscoreService, playerService } from "../services";
 
 const gameUrl = ref("/game/gunRunner/index.html");
 const distance = ref(0);
 const startGame = ref(false);
 const toggleControlls = ref(false);
 
-defineProps({
+const props = defineProps({
   goBack: {
     type: Function,
     default: () => {},
@@ -21,11 +21,18 @@ const play = () => {
   toggleControlls.value = true;
 };
 
-const handleMessage = (event: MessageEvent) => {
+const handleMessage = async (event: MessageEvent) => {
   if (event.data) {
     if (event.data.type === "distance") {
       if (event.data.value > distance.value) {
-        distance.value = event.data.value;
+        distance.value = +event.data.value;
+        if (playerHighscore.value < distance.value && playerName.value.length) {
+          await highscoreService.updateHighscore(
+            playerName.value,
+            distance.value
+          );
+          allHighscores.value = await highscoreService.getHighscores();
+        }
       }
     }
     if (event.data.type === "quitGame") {
@@ -35,19 +42,23 @@ const handleMessage = (event: MessageEvent) => {
 };
 
 const allHighscores = ref<Highscore[]>([]);
+const playerName = ref<string>("");
 
-const fetchHighscores = async () => {
-  allHighscores.value = await highscoreService.getHighscores();
-};
-
-onMounted(() => {
-  fetchHighscores();
+const playerHighscore = computed(
+  () =>
+    allHighscores.value.find((highscore) => highscore.name === playerName.value)
+      ?.score ?? 0
+);
+onMounted(async () => {
   window.addEventListener("message", handleMessage);
+  playerName.value = await playerService.getPlayername();
+  allHighscores.value = await highscoreService.getHighscores();
 });
 
-onUnmounted(() => {
+const reset = () => {
+  props.goBack();
   window.removeEventListener("message", handleMessage);
-});
+};
 
 const gunRunnerContainer = ref<HTMLDivElement | null>(null);
 
@@ -59,6 +70,23 @@ defineExpose({ gunRunnerContainer });
     ref="gunRunnerContainer"
     class="relative w-[80.1rem] h-[70.5rem] flex flex-col items-center"
   >
+    <div class="bg-black w-full z-10 flex justify-center" :key="distance">
+      <div
+        class="w-[60rem] h-5 flex flex-col sm:flex-row items-center justify-between"
+      >
+        <div class="z-10 text-white font-pixel flex gap-1">
+          <span>Player:</span>
+          <span
+            class="underline w-[25rem] overflow-hidden text-nowrap text-ellipsis"
+            >{{ playerName }}</span
+          >
+        </div>
+        <div class="z-10 text-white font-pixel flex gap-1">
+          <span>Highscore:</span>
+          <span>{{ playerHighscore }}m</span>
+        </div>
+      </div>
+    </div>
     <img
       v-if="!startGame"
       class="my-4 z-10 h-[25rem] sm:h-[39rem]"
@@ -96,7 +124,7 @@ defineExpose({ gunRunnerContainer });
         icon="control"
       >
       </FancyButton>
-      <FancyButton :action="goBack" icon="home"> </FancyButton>
+      <FancyButton :action="reset" icon="home"> </FancyButton>
     </div>
     <div
       class="w-[30rem] sm:w-[60rem] h-[19rem] z-10 flex gap-4 text-white font-pixel"
@@ -144,14 +172,14 @@ defineExpose({ gunRunnerContainer });
             <li><span class="text-green-200">Space Bar</span> to jump</li>
             <li><span class="text-green-200">S</span> to stop</li>
           </div>
-          <div v-if="startGame" class="flex flex-col gap-2">
+          <div class="flex flex-col gap-2">
             <div>
               <span class="mr-5 font-semi-bold text-[1.5rem]">Highscrore</span>
               <hr class="w-[21rem] h-[1px] border-t-0 bg-white mb-2" />
             </div>
-            <!-- TODO: Add Highscore system -->
             <div
               v-if="allHighscores.length"
+              :key="distance"
               class="flex flex-col gap-1 h-[10rem] overflow-y-auto"
             >
               <span
@@ -163,12 +191,16 @@ defineExpose({ gunRunnerContainer });
                   'text-arcade-400': idx === 2,
                 }"
               >
-                {{ `${idx + 1}. ${highscore.name}: ${highscore.score}m` }}
+                <div class="flex gap-1">
+                  <span>{{ `${idx + 1}.` }}</span>
+                  <span
+                    class="w-[10rem] sm:w-[25rem] overflow-hidden text-ellipsis"
+                    >{{ `${highscore.name}:` }}</span
+                  >
+                  <span>{{ `${highscore.score}m` }}</span>
+                </div>
               </span>
             </div>
-            <span class="mt-3 text-[1.7rem]"
-              >Your best score: {{ distance }}m</span
-            >
           </div>
         </div>
       </Transition>

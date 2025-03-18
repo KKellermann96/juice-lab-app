@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { HighscoreService } from "./highscoreService";
+import { PlayerService } from "./playerService";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_ENDPOINT,
@@ -10,3 +11,4 @@ const axiosInstance = axios.create({
 });
 
 export const highscoreService = new HighscoreService(axiosInstance);
+export const playerService = new PlayerService(axiosInstance);

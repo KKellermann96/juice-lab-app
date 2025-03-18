@@ -7,7 +7,11 @@ export const configureControls = (
   camera: PerspectiveCamera,
   renderer: WebGLRenderer
 ): OrbitControls => {
-  camera.position.set(30, 8, 2);
+  camera.position.set(
+    startingCoordinates.position.x,
+    startingCoordinates.position.y,
+    startingCoordinates.position.z
+  );
   // OrbitControls setup
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 0, 0);

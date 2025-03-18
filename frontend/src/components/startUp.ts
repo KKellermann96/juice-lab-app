@@ -88,8 +88,6 @@ export const startUp = async (
 
   mainScene.add(model);
 
-  // TODO these videos lag the game tremendously
-  // Decrease file size and destroy videos onUnMount
   addVideo(
     "/videos/sideDisplay.mp4",
     new Vector3(-4.65, 9.3, -6.75),

@@ -97,7 +97,6 @@ defineExpose({ aboutMeContainer });
               <h2 class="font-semi-bold text-[1.3rem] mb-2">
                 Appetizer (Introduction)
               </h2>
-              <!-- TODO REwrite so that my degree is second -->
               <p class="mb-2">
                 My name is Kristian, and I am a passionate Full Stack Developer
                 with a strong background in software development. I hold a
