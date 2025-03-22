@@ -22,7 +22,7 @@ app.use(
   })
 );
 
-const db = new SQLite("database.db", { verbose: console.log });
+const db = new SQLite("./db/database.db", { verbose: console.log });
 
 const createTable = db.prepare(`
   CREATE TABLE IF NOT EXISTS highscore (

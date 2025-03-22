@@ -1,0 +1,23 @@
+version: '3'
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "${FRONTEND_PORT}:80"
+    depends_on:
+      - backend
+    networks:
+      - app-networks
+
+  backend:
+    build: ./backend
+    ports:
+      - "${BACKEND_PORT}:7003"
+    volumes:
+      - ./db:/app/db
+    networks:
+      - app-networks
+
+networks:
+  app-networks:
+    driver: bridge

@@ -4,4 +4,4 @@ Inspired by Jesse Zhou (https://jesse-zhou.medium.com/jesses-ramen-case-study-77
 
 ## TODO
 
-- Check if I need to dispose other elements
+- Test on mobile

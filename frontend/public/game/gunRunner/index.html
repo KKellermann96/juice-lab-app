@@ -7,7 +7,7 @@
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
     <canvas id="unity-canvas"></canvas>
-    <script src="Build/gunRunner.loader.js"></script>
+    <script src="Build/GR2.loader.js"></script>
     <script>
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         // Mobile device style: fill the whole browser client area with the game canvas:
@@ -25,9 +25,9 @@
       }
 
       createUnityInstance(document.querySelector("#unity-canvas"), {
-        dataUrl: "Build/gunRunner.data.gz",
-        frameworkUrl: "Build/gunRunner.framework.js.gz",
-        codeUrl: "Build/gunRunner.wasm.gz",
+        dataUrl: "Build/GR2.data",
+        frameworkUrl: "Build/GR2.framework.js",
+        codeUrl: "Build/GR2.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "Kristian",
         productName: "Gun Runner",

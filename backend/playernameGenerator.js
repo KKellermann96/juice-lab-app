@@ -7,7 +7,7 @@ import {
 } from "unique-names-generator";
 import { v4 as uuidv4 } from "uuid";
 
-const db = new SQLite("database.db", { verbose: console.log });
+const db = new SQLite("./db/database.db", { verbose: console.log });
 
 function generateUniquePlayername(maxAttempts = 50) {
   for (let attempt = 0; attempt < maxAttempts; ++attempt) {
