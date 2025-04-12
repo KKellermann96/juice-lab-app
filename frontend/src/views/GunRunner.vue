@@ -99,7 +99,7 @@ defineExpose({ gunRunnerContainer });
         </div>
         <img
           v-if="!startGame"
-          class="my-4 z-10 h-[25rem] sm:h-[39rem]"
+          class="my-3 z-10 h-[25rem] sm:h-[39rem]"
           src="/images/gunRunnerBanner.jpg"
           alt="GunRunnerBanner"
         />
