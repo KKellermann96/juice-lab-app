@@ -32,7 +32,8 @@ const mouseEvents = (
   resetToStart: Function,
   mainScene: Scene,
   css3dObject: Ref<CSS3DObject | undefined>,
-  menuCardObject: ModelObject
+  menuCardObject: ModelObject,
+  isMobile: boolean
 ) => {
   let mousePointer = new Vector2();
   const raycaster = new Raycaster();
@@ -61,7 +62,8 @@ const mouseEvents = (
         resetToStart,
         mainScene,
         css3dObject,
-        menuCardObject
+        menuCardObject,
+        isMobile
       );
     }
   };
@@ -111,7 +113,8 @@ const onClick = async (
   resetToStart: Function,
   mainScene: Scene,
   css3dObject: Ref<CSS3DObject | undefined>,
-  menuCardObject: ModelObject
+  menuCardObject: ModelObject,
+  isMobile: boolean
 ) => {
   const coordinates = navigationCoordinates.find(
     (item) => item.objectName === navItem
@@ -132,7 +135,8 @@ const onClick = async (
     resetToStart,
     mainScene,
     css3dObject,
-    menuCardObject
+    menuCardObject,
+    isMobile
   );
 };
 

@@ -14,7 +14,8 @@ export const createView = (
   resetToStart: Function,
   mainScene: Scene,
   css3dObject: Ref<CSS3DObject | undefined>,
-  menuCardObject: ModelObject
+  menuCardObject: ModelObject,
+  isMobile: boolean
 ) => {
   // A B O U T  M E
   if (coordinates.objectName === NavigationNames.aboutMe) {
@@ -22,6 +23,7 @@ export const createView = (
       goBack: resetToStart,
       showOrHideMenu: moveMesh,
       menuCardObject: menuCardObject,
+      isMobile: isMobile,
     });
     const instance = vueApp.mount(document.createElement("div"));
     const aboutMeElement = (instance as any).aboutMeContainer;
@@ -32,7 +34,7 @@ export const createView = (
       coordinates.position.y,
       coordinates.position.z + 0.21
     );
-    css3dObject.value.rotation.y = Math.PI / 2 + 0.4;
+    css3dObject.value.rotation.y = coordinates.rotation.y;
     css3dObject.value.scale.set(0.000649, 0.000649, 0.000649);
 
     mainScene.add(css3dObject.value);
@@ -41,6 +43,7 @@ export const createView = (
   } else if (coordinates.objectName === NavigationNames.projects) {
     const vueApp = createApp(Projects, {
       goBack: resetToStart,
+      isMobile: isMobile,
     });
     const instance = vueApp.mount(document.createElement("div"));
     const projectsElement = (instance as any).projectsContainer;
@@ -51,7 +54,7 @@ export const createView = (
       coordinates.position.y,
       coordinates.position.z + 0.5
     );
-    css3dObject.value.rotation.y = Math.PI;
+    css3dObject.value.rotation.y = coordinates.rotation.y;
     css3dObject.value.scale.set(0.0006, 0.0006, 0.0006);
     mainScene.add(css3dObject.value);
     htmlRenderer.domElement.style.pointerEvents = "auto";
@@ -67,9 +70,9 @@ export const createView = (
     css3dObject.value.position.set(
       coordinates.position.x - 0.5,
       coordinates.position.y,
-      coordinates.position.z
+      coordinates.position.z + 0.05
     );
-    css3dObject.value.rotation.y = Math.PI / 2 + 0.1;
+    css3dObject.value.rotation.y = coordinates.rotation.y;
     css3dObject.value.scale.set(0.00065, 0.00065, 0.00065);
     mainScene.add(css3dObject.value);
     htmlRenderer.domElement.style.pointerEvents = "auto";
@@ -77,6 +80,7 @@ export const createView = (
   } else if (coordinates.objectName === NavigationNames.game) {
     const vueApp = createApp(GunRunner, {
       goBack: resetToStart,
+      isMobile: isMobile,
     });
     const instance = vueApp.mount(document.createElement("div"));
     const gunRunnerElement = (instance as any).gunRunnerContainer;
@@ -87,7 +91,7 @@ export const createView = (
       coordinates.position.y,
       coordinates.position.z
     );
-    css3dObject.value.rotation.y = Math.PI / 2;
+    css3dObject.value.rotation.y = coordinates.rotation.y;
     css3dObject.value.scale.set(0.000598, 0.000598, 0.000598);
     mainScene.add(css3dObject.value);
     htmlRenderer.domElement.style.pointerEvents = "auto";

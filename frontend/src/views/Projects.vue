@@ -10,6 +10,10 @@ defineProps({
     type: Function,
     default: () => {},
   },
+  isMobile: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const selectedProjectId = ref<number | undefined>(undefined);
@@ -21,50 +25,59 @@ defineExpose({ projectsContainer });
 <template>
   <div
     ref="projectsContainer"
-    class="w-[54.8rem] h-[72.8rem] flex justify-center items-center"
+    class="relative h-screen w-screen flex justify-center items-center !select-text"
   >
-    <div class="relative w-full h-full bg-Mint-300 py-5 px-4 rounded-[50px]">
-      <Transition name="fade" mode="out-in">
-        <div v-if="selectedProjectId != undefined" class="flex justify-center">
-          <ProjectDescription
-            :imgPath="projectItems[selectedProjectId].imgSrc"
-            :title="projectItems[selectedProjectId].title"
-            :description="projectItems[selectedProjectId].description"
-          ></ProjectDescription>
-        </div>
+    <div>
+      <div class="w-[54.8rem] h-[72.8rem] flex flex-col items-center">
         <div
-          v-else
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 h-[57rem] overflow-y-auto p-3 mb-3"
+          class="relative w-full h-full bg-Mint-300 py-5 px-4 rounded-[50px]"
         >
+          <Transition name="fade" mode="out-in">
+            <div
+              v-if="selectedProjectId !== undefined"
+              class="flex justify-center"
+            >
+              <ProjectDescription
+                :imgPath="projectItems[selectedProjectId].imgSrc"
+                :title="projectItems[selectedProjectId].title"
+                :description="projectItems[selectedProjectId].description"
+              ></ProjectDescription>
+            </div>
+            <div
+              v-else
+              class="grid grid-cols-2 md:grid-cols-3 gap-5 h-[57rem] overflow-y-auto p-3 mb-3"
+            >
+              <div
+                v-for="(item, i) in projectItems"
+                :key="i"
+                class="flex justify-center"
+              >
+                <ProjectCard
+                  :title="item.title"
+                  :imgPath="item.imgSrc"
+                  :disable="item.imgSrc.startsWith('can')"
+                  @onClick="selectedProjectId = i"
+                ></ProjectCard>
+              </div>
+            </div>
+          </Transition>
           <div
-            v-for="(item, i) in projectItems"
-            :key="i"
-            class="flex justify-center"
+            class="absolute bottom-5 w-[51rem] flex justify-center sm:justify-between gap-x-2"
           >
-            <ProjectCard
-              :title="item.title"
-              :imgPath="item.imgSrc"
-              :disable="item.imgSrc.startsWith('can')"
-              @onClick="selectedProjectId = i"
-            ></ProjectCard>
+            <FancyButton
+              v-if="selectedProjectId != undefined"
+              :action="
+                () => {
+                  selectedProjectId = undefined;
+                }
+              "
+              icon="back"
+            >
+            </FancyButton>
+            <div v-else></div>
+            <FancyButton :action="goBack" icon="home"> </FancyButton>
           </div>
         </div>
-      </Transition>
-      <div
-        class="absolute bottom-5 w-[51rem] flex justify-center sm:justify-between gap-x-2"
-      >
-        <FancyButton
-          v-if="selectedProjectId != undefined"
-          :action="
-            () => {
-              selectedProjectId = undefined;
-            }
-          "
-          icon="back"
-        >
-        </FancyButton>
-        <div v-else></div>
-        <FancyButton :action="goBack" icon="home"> </FancyButton>
       </div>
     </div>
   </div>

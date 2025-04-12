@@ -4,4 +4,6 @@ Inspired by Jesse Zhou (https://jesse-zhou.medium.com/jesses-ramen-case-study-77
 
 ## TODO
 
-- Test on mobile
+- On Mobile
+  - Disable double tab
+  - Videos dont work

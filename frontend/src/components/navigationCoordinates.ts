@@ -30,11 +30,15 @@ export const navigationCoordinates: NavigationConfig[] = [
 
 export const startingCoordinates: NavigationConfigQuaternion = {
   objectName: NavigationNames.start,
-  position: new Vector3(29.3, 14.3, -15.4),
+  position: new Vector3(
+    25.94995470625425,
+    18.67540028941916,
+    -23.68572521993623
+  ),
   rotation: new Vector4(
-    -0.10470398253995944,
-    0.838203527285549,
-    0.17331762518282762,
-    0.5063723172600576
+    0.39165635691103623,
+    -0.09762413489507558,
+    0.8877551990499079,
+    0.22128156935683016
   ),
 };

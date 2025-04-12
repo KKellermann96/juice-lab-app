@@ -17,6 +17,10 @@ const props = defineProps({
     type: ModelObject,
     default: new ModelObject(),
   },
+  isMobile: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const isTransitioning = ref(false);
@@ -39,12 +43,20 @@ const handleWheel = async (event) => {
 };
 
 onMounted(() => {
-  window.addEventListener("wheel", handleWheel);
+  if (props.isMobile) {
+    window.addEventListener("pointerdown", handleWheel);
+  } else {
+    window.addEventListener("wheel", handleWheel);
+  }
 });
 
 const reset = () => {
   props.goBack();
-  window.removeEventListener("wheel", handleWheel);
+  if (props.isMobile) {
+    window.removeEventListener("pointerdown", handleWheel);
+  } else {
+    window.removeEventListener("wheel", handleWheel);
+  }
   props.showOrHideMenu(props.menuCardObject, "power2.in");
 };
 
@@ -71,16 +83,20 @@ defineExpose({ aboutMeContainer });
         class="absolute inset-0 flex items-center justify-center"
       >
         <div class="flex justify-center items-center">
-          <span class="font-semi-bold text-white text-[1.4rem]"
-            >- Scroll up</span
-          >
+          <span class="font-semi-bold text-white text-[1.4rem]">{{
+            !isMobile ? "- Scroll up" : "- Tab to bring up the menu -"
+          }}</span>
           <img
+            v-if="!isMobile"
             src="/icons/scrollUpIcon.png"
             alt="scrollDown"
             class="h-[2.6rem]"
           />
-          <span class="font-semi-bold text-white text-[1.4rem]"
-            >to bring up the menu -</span
+          <span
+            v-if="!isMobile"
+            class="font-semi-bold text-white text-[1.4rem]"
+          >
+            to bring up the menu -</span
           >
         </div>
       </div>
@@ -186,7 +202,7 @@ defineExpose({ aboutMeContainer });
             </div>
           </div>
         </div>
-        <div class="flex justify-center items-center">
+        <div v-if="!isMobile" class="flex justify-center items-center">
           <span class="font-semi-bold text-[1.4rem]">- Scroll down</span>
           <img
             src="/icons/scrollDownIcon.png"

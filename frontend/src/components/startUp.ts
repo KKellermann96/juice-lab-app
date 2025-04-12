@@ -32,7 +32,7 @@ import { addVideo } from "../addVideo";
 import { ModelObject, ModelNames } from "../models";
 
 //Total items in the scene
-const TOTAL_ITEMS = 25;
+const TOTAL_ITEMS = 26;
 
 export const startUp = async (
   canvas: Ref<HTMLCanvasElement | null>,
@@ -43,6 +43,7 @@ export const startUp = async (
   progress: Ref<number>
 ) => {
   if (!canvas.value) return;
+  const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
   const mainScene = new Scene();
 
@@ -136,20 +137,31 @@ export const startUp = async (
     resetToStart,
     mainScene,
     css3dObject,
-    menuCardObject
+    menuCardObject,
+    isMobile
   );
 
-  window.addEventListener("click", onMouseClick, false);
-  window.addEventListener("mousemove", onMouseMove, false);
+  if (isMobile) {
+    window.addEventListener("pointerdown", onMouseClick, false);
+  } else {
+    window.addEventListener("click", onMouseClick, false);
+    window.addEventListener("mousemove", onMouseMove, false);
+  }
 
-  // Handle window resize
-  window.addEventListener("resize", () => {
+  const updateRendererSize = () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
     composer.setSize(window.innerWidth, window.innerHeight);
     htmlRenderer.setSize(window.innerWidth, window.innerHeight);
-  });
+  };
+
+  // Handle window resize
+  if (isMobile) {
+    window.visualViewport?.addEventListener("resize", updateRendererSize);
+  } else {
+    window.addEventListener("resize", updateRendererSize);
+  }
 
   // Animation loop
   const animate = () => {

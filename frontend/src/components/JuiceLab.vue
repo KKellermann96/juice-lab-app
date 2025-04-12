@@ -20,6 +20,8 @@ onMounted(() => {
   htmlRenderer.domElement.style.position = "absolute";
   htmlRenderer.domElement.style.top = "0px";
   htmlRenderer.domElement.style.pointerEvents = "none";
+  htmlRenderer.domElement.style.userSelect = "none";
+  htmlRenderer.domElement.style.touchAction = "none";
   document.body.appendChild(htmlRenderer.domElement);
   startUp(
     threeCanvas,
