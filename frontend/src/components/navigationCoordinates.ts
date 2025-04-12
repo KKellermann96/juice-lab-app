@@ -36,9 +36,9 @@ export const startingCoordinates: NavigationConfigQuaternion = {
     -23.68572521993623
   ),
   rotation: new Vector4(
-    0.39165635691103623,
     -0.09762413489507558,
     0.8877551990499079,
-    0.22128156935683016
+    0.22128156935683016,
+    0.39165635691103623
   ),
 };
