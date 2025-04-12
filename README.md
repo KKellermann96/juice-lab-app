@@ -4,6 +4,8 @@ This project is an interactive portfolio web application developed with Vue 3, T
 
 ## Demo
 
+![Juice Lab](frontend/public/images/juiceLab.jpg)
+
 Visit my [portfolio website](https://kellermannk.com/) to see the app in action.
 
 ## Features
