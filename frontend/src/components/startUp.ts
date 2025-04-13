@@ -32,7 +32,7 @@ import { addVideo } from "../addVideo";
 import { ModelObject, ModelNames } from "../models";
 
 //Total items in the scene
-const TOTAL_ITEMS = 26;
+const TOTAL_ITEMS = 25;
 
 export const startUp = async (
   canvas: Ref<HTMLCanvasElement | null>,
