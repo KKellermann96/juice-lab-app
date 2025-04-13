@@ -30,6 +30,7 @@ import mouseEvents from "./mouseEvents";
 import { initClickableObjects } from "./navigationHelper";
 import { addVideo } from "../addVideo";
 import { ModelObject, ModelNames } from "../models";
+import { DRACOLoader } from "three/examples/jsm/Addons.js";
 
 //Total items in the scene
 const TOTAL_ITEMS = 25;
@@ -194,6 +195,13 @@ const loadGLBModel = async (
     };
 
     const loader = new GLTFLoader(loadingManager);
+    const dLoader = new DRACOLoader();
+    dLoader.setDecoderPath(
+      "https://www.gstatic.com/draco/versioned/decoders/1.5.7/"
+    );
+    dLoader.setDecoderConfig({ type: "js" });
+    loader.setDRACOLoader(dLoader);
+
     const gltf = await loader.loadAsync(modelPath);
     return gltf;
   } catch (error) {
